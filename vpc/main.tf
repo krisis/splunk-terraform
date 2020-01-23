@@ -28,6 +28,7 @@ resource "aws_security_group" "my_ingress_all_test" {
   name   = "my-allow-all-sg"
   vpc_id = "${aws_vpc.my_vpc.id}"
   ingress {
+   # to allow SSH from laptop
     cidr_blocks = [
       "0.0.0.0/0"
     ]
@@ -35,6 +36,27 @@ resource "aws_security_group" "my_ingress_all_test" {
     to_port   = 22
     protocol  = "tcp"
   }
+
+  # to allow traffic between MinIO servers
+  ingress {
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    from_port = 9000
+    to_port   = 9000
+    protocol  = "tcp"
+  }
+
+  # to allow traffic to splunk processes
+  ingress {
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    from_port = 5001
+    to_port   = 5001
+    protocol  = "tcp"
+  }
+
   // Terraform removes the default rule
   egress {
     from_port   = 0
